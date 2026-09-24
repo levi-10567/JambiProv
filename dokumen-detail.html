@@ -468,71 +468,174 @@ ul.clean-list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direct
  <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const params = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams(window.location.search);
 
-    const judul = params.get('judul');
-    const tahun = params.get('tahun');
-    const file = params.get('file');
+  const judul = params.get('judul');
+  const tahun = params.get('tahun');
+  const file = params.get('file');
 
-    const docTitle = document.getElementById('docTitle');
-    const docTitle2 = document.getElementById('docTitle2');
-    const docYear = document.getElementById('docYear');
+  const docTitle = document.getElementById('docTitle');
+  const docTitle2 = document.getElementById('docTitle2');
+  const docYear = document.getElementById('docYear');
 
-    const previewLink = document.getElementById('docPreviewLink');
-    const downloadLink = document.getElementById('docDownloadLink');
-    const previewFrame = document.getElementById('docPreviewFrame');
+  const previewLink = document.getElementById('docPreviewLink');
+  const downloadLink = document.getElementById('docDownloadLink');
+  const previewFrame = document.getElementById('docPreviewFrame');
 
-    const fallback = document.getElementById('docFallback');
+  const previewCount = document.getElementById('docPreviewCount');
+  const downloadCount = document.getElementById('docDownloadCount');
 
-    // Jika file tidak ditemukan di URL
-    if (!file) {
-        if (docTitle) docTitle.textContent = 'Dokumen tidak ditemukan';
-        if (docTitle2) docTitle2.textContent = 'Dokumen tidak ditemukan';
+  const fallback = document.getElementById('docFallback');
 
-        if (fallback) {
-            fallback.hidden = false;
-        }
+  // ==========================================
+  // CEK FILE
+  // ==========================================
 
-        return;
-    }
+  if (!file) {
 
-    // Judul
     if (docTitle) {
-        docTitle.textContent = judul || 'Dokumen';
+      docTitle.textContent = 'Dokumen tidak ditemukan';
     }
 
     if (docTitle2) {
-        docTitle2.textContent = judul || 'Dokumen';
+      docTitle2.textContent = 'Dokumen tidak ditemukan';
     }
 
-    // Tahun
-    if (docYear) {
-        docYear.textContent = 'Tahun ' + (tahun || '');
-    }
-
-    // Tampilkan PDF
-    if (previewFrame) {
-        previewFrame.src = file;
-    }
-
-    // Tombol Pratinjau
-    if (previewLink) {
-        previewLink.href = file;
-    }
-
-    // Tombol Unduh
-    if (downloadLink) {
-        downloadLink.href = file;
-        downloadLink.setAttribute(
-            'download',
-            'LKPJ-Provinsi-' + (tahun || '') + '.pdf'
-        );
-    }
-
-    // Sembunyikan pesan dokumen tidak tersedia
     if (fallback) {
-        fallback.hidden = true;
+      fallback.hidden = false;
     }
+
+    return;
+  }
+
+
+  // ==========================================
+  // INFORMASI DOKUMEN
+  // ==========================================
+
+  if (docTitle) {
+    docTitle.textContent = judul || 'Dokumen';
+  }
+
+  if (docTitle2) {
+    docTitle2.textContent = judul || 'Dokumen';
+  }
+
+  if (docYear) {
+    docYear.textContent = 'Tahun ' + (tahun || '');
+  }
+
+
+  // ==========================================
+  // TAMPILKAN PDF
+  // ==========================================
+
+  if (previewFrame) {
+    previewFrame.src = file;
+  }
+
+
+  // ==========================================
+  // KEY UNTUK SETIAP DOKUMEN
+  // ==========================================
+
+  const documentKey = 'dokumen_' + (tahun || 'default');
+
+
+  // ==========================================
+  // AMBIL JUMLAH PRATINJAU
+  // ==========================================
+
+  let jumlahPreview = parseInt(
+    localStorage.getItem(documentKey + '_preview') || '0'
+  );
+
+
+  // ==========================================
+  // AMBIL JUMLAH DOWNLOAD
+  // ==========================================
+
+  let jumlahDownload = parseInt(
+    localStorage.getItem(documentKey + '_download') || '0'
+  );
+
+
+  // ==========================================
+  // TAMPILKAN JUMLAH AWAL
+  // ==========================================
+
+  if (previewCount) {
+    previewCount.textContent = jumlahPreview + ' kali';
+  }
+
+  if (downloadCount) {
+    downloadCount.textContent = jumlahDownload + ' kali';
+  }
+
+
+  // ==========================================
+  // TOMBOL PRATINJAU
+  // ==========================================
+
+  if (previewLink) {
+
+    previewLink.href = file;
+    previewLink.target = '_blank';
+
+    previewLink.addEventListener('click', function () {
+
+      jumlahPreview++;
+
+      localStorage.setItem(
+        documentKey + '_preview',
+        jumlahPreview
+      );
+
+      if (previewCount) {
+        previewCount.textContent = jumlahPreview + ' kali';
+      }
+
+    });
+
+  }
+
+
+  // ==========================================
+  // TOMBOL DOWNLOAD
+  // ==========================================
+
+  if (downloadLink) {
+
+    downloadLink.href = file;
+
+    downloadLink.download =
+      'LKPJ-Provinsi-' + (tahun || '') + '.pdf';
+
+    downloadLink.addEventListener('click', function () {
+
+      jumlahDownload++;
+
+      localStorage.setItem(
+        documentKey + '_download',
+        jumlahDownload
+      );
+
+      if (downloadCount) {
+        downloadCount.textContent = jumlahDownload + ' kali';
+      }
+
+    });
+
+  }
+
+
+  // ==========================================
+  // SEMBUNYIKAN PESAN ERROR
+  // ==========================================
+
+  if (fallback) {
+    fallback.hidden = true;
+  }
 
 });
 </script>
