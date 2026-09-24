@@ -465,4 +465,84 @@ ul.clean-list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direct
 })();
 
 </script>
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  const params = new URLSearchParams(window.location.search);
+
+  const judul = params.get('judul');
+  const tahun = params.get('tahun');
+  const file = params.get('file');
+
+  const docTitle = document.getElementById('docTitle');
+  const docTitle2 = document.getElementById('docTitle2');
+  const docYear = document.getElementById('docYear');
+
+  const previewLink = document.getElementById('docPreviewLink');
+  const downloadLink = document.getElementById('docDownloadLink');
+  const previewFrame = document.getElementById('docPreviewFrame');
+
+  const fallback = document.getElementById('docFallback');
+
+  // Jika parameter file tidak ditemukan
+  if (!file) {
+    if (docTitle) docTitle.textContent = 'Dokumen tidak ditemukan';
+    if (docTitle2) docTitle2.textContent = 'Dokumen tidak ditemukan';
+
+    if (fallback) {
+      fallback.hidden = false;
+    }
+
+    return;
+  }
+
+  // ==========================
+  // INFORMASI DOKUMEN
+  // ==========================
+
+  if (docTitle) {
+    docTitle.textContent = judul || 'Dokumen';
+  }
+
+  if (docTitle2) {
+    docTitle2.textContent = judul || 'Dokumen';
+  }
+
+  if (docYear) {
+    docYear.textContent = 'Tahun ' + (tahun || '');
+  }
+
+  // ==========================
+  // TAMPILKAN PDF DI HALAMAN
+  // ==========================
+
+  if (previewFrame) {
+    previewFrame.src = file;
+  }
+
+  // ==========================
+  // TOMBOL PRATINJAU
+  // ==========================
+
+  if (previewLink) {
+    previewLink.href = file;
+    previewLink.target = '_blank';
+  }
+
+  // ==========================
+  // TOMBOL UNDUH
+  // ==========================
+
+  if (downloadLink) {
+    downloadLink.href = file;
+    downloadLink.download = 'LKPJ-Provinsi-' + tahun + '.pdf';
+  }
+
+  // Sembunyikan pesan error
+  if (fallback) {
+    fallback.hidden = true;
+  }
+
+});
+</script>
 </body></html>
