@@ -465,83 +465,74 @@ ul.clean-list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direct
 })();
 
 </script>
-  <script>
+ <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-  const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.location.search);
 
-  const judul = params.get('judul');
-  const tahun = params.get('tahun');
-  const file = params.get('file');
+    const judul = params.get('judul');
+    const tahun = params.get('tahun');
+    const file = params.get('file');
 
-  const docTitle = document.getElementById('docTitle');
-  const docTitle2 = document.getElementById('docTitle2');
-  const docYear = document.getElementById('docYear');
+    const docTitle = document.getElementById('docTitle');
+    const docTitle2 = document.getElementById('docTitle2');
+    const docYear = document.getElementById('docYear');
 
-  const previewLink = document.getElementById('docPreviewLink');
-  const downloadLink = document.getElementById('docDownloadLink');
-  const previewFrame = document.getElementById('docPreviewFrame');
+    const previewLink = document.getElementById('docPreviewLink');
+    const downloadLink = document.getElementById('docDownloadLink');
+    const previewFrame = document.getElementById('docPreviewFrame');
 
-  const fallback = document.getElementById('docFallback');
+    const fallback = document.getElementById('docFallback');
 
-  // Jika parameter file tidak ditemukan
-  if (!file) {
-    if (docTitle) docTitle.textContent = 'Dokumen tidak ditemukan';
-    if (docTitle2) docTitle2.textContent = 'Dokumen tidak ditemukan';
+    // Jika file tidak ditemukan di URL
+    if (!file) {
+        if (docTitle) docTitle.textContent = 'Dokumen tidak ditemukan';
+        if (docTitle2) docTitle2.textContent = 'Dokumen tidak ditemukan';
 
-    if (fallback) {
-      fallback.hidden = false;
+        if (fallback) {
+            fallback.hidden = false;
+        }
+
+        return;
     }
 
-    return;
-  }
+    // Judul
+    if (docTitle) {
+        docTitle.textContent = judul || 'Dokumen';
+    }
 
-  // ==========================
-  // INFORMASI DOKUMEN
-  // ==========================
+    if (docTitle2) {
+        docTitle2.textContent = judul || 'Dokumen';
+    }
 
-  if (docTitle) {
-    docTitle.textContent = judul || 'Dokumen';
-  }
+    // Tahun
+    if (docYear) {
+        docYear.textContent = 'Tahun ' + (tahun || '');
+    }
 
-  if (docTitle2) {
-    docTitle2.textContent = judul || 'Dokumen';
-  }
+    // Tampilkan PDF
+    if (previewFrame) {
+        previewFrame.src = file;
+    }
 
-  if (docYear) {
-    docYear.textContent = 'Tahun ' + (tahun || '');
-  }
+    // Tombol Pratinjau
+    if (previewLink) {
+        previewLink.href = file;
+    }
 
-  // ==========================
-  // TAMPILKAN PDF DI HALAMAN
-  // ==========================
+    // Tombol Unduh
+    if (downloadLink) {
+        downloadLink.href = file;
+        downloadLink.setAttribute(
+            'download',
+            'LKPJ-Provinsi-' + (tahun || '') + '.pdf'
+        );
+    }
 
-  if (previewFrame) {
-    previewFrame.src = file;
-  }
-
-  // ==========================
-  // TOMBOL PRATINJAU
-  // ==========================
-
-  if (previewLink) {
-    previewLink.href = file;
-    previewLink.target = '_blank';
-  }
-
-  // ==========================
-  // TOMBOL UNDUH
-  // ==========================
-
-  if (downloadLink) {
-    downloadLink.href = file;
-    downloadLink.download = 'LKPJ-Provinsi-' + tahun + '.pdf';
-  }
-
-  // Sembunyikan pesan error
-  if (fallback) {
-    fallback.hidden = true;
-  }
+    // Sembunyikan pesan dokumen tidak tersedia
+    if (fallback) {
+        fallback.hidden = true;
+    }
 
 });
 </script>
